@@ -1,6 +1,7 @@
 #include <Arduino.h>
 #include "motor.hpp"
 
+
 void setupMotors()
 {
   for (int i = 0; i < 4; i++)
@@ -9,7 +10,10 @@ void setupMotors()
     pinMode(motor_pwm[i], OUTPUT);
     pinMode(motor_dir1[i], OUTPUT);
     pinMode(motor_dir2[i], OUTPUT);
-    ledcAttach(motor_pwm[i], 5000, 8);  // PWMの設定
+    //ledAttach(motor_pwm[i], 5000, 8);  // PWMの設定
+    ledcSetup(i, 1000, 8);
+    ledcAttachPin(motor_pwm[i], i);
+    ledcWrite(i,0);
   }
 }
 
@@ -32,7 +36,7 @@ void driveMotor(int index, float controlSignal)
     digitalWrite(motor_dir1[index], HIGH);
     digitalWrite(motor_dir2[index], HIGH);
   }
-  ledcWrite(motor_pwm[index], (int)controlSignal);
+  ledcWrite(index, (int)controlSignal);
 }
 
 // モーターを停止
@@ -42,6 +46,6 @@ void stopMotors()
   {
     digitalWrite(motor_dir1[i], HIGH);
     digitalWrite(motor_dir2[i], HIGH);
-    ledcWrite(motor_pwm[i], 0);
+    ledcWrite(i, 0);
   }
 }
